@@ -1,3 +1,4 @@
+-- HEAD
 # Section D – Observability with OpenTelemetry
 
 **Stack:** Python/Flask app (`orders-api`) → OpenTelemetry SDK → OpenTelemetry Collector → Prometheus (metrics), Tempo (traces), Loki (logs) → Grafana dashboard.
@@ -79,7 +80,7 @@ Post-deploy routine: (1) smoke-test and check health; (2) compare golden signals
 
 ## 7. Demonstration – slow and failed requests
 
-> Run `./loadgen.sh` first to create a healthy baseline, then inject the faults. (The commands below are the exact steps; screenshots can be taken from Grafana at each step.)
+-- Run `./loadgen.sh` first to create a healthy baseline, then inject the faults. (The commands below are the exact steps; screenshots can be taken from Grafana at each step.)
 
 ### A. Slow request
 ```bash
@@ -133,3 +134,6 @@ This is the core workflow: **metrics say something is wrong → traces say where
 
 ## Files
 `app/` application + Dockerfile · `otel-collector-config.yaml` · `prometheus.yml` · `tempo.yaml` · `docker-compose.yml` · `grafana/` provisioning + dashboard JSON · `loadgen.sh` traffic and fault generator
+=======
+# git-practice-Bharadwaj
+
