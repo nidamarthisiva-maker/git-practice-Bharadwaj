@@ -1,0 +1,7 @@
+venv/
+__pycache__/
+*.pyc
+.env
+collector-cloud.yaml
+otelcol-contrib*
+.DS_Store

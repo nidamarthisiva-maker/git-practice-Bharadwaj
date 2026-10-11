@@ -1,0 +1,36 @@
+receivers:
+  otlp:                       # app -> collector
+    protocols:
+      grpc: { endpoint: 0.0.0.0:4317 }
+      http: { endpoint: 0.0.0.0:4318 }
+  hostmetrics:                # infrastructure metrics collected by the collector itself
+    collection_interval: 10s
+    scrapers:
+      cpu: {}
+      memory: {}
+
+processors:
+  memory_limiter:
+    check_interval: 1s
+    limit_mib: 256
+  resource:
+    attributes:
+      - { key: collector.pipeline, value: demo, action: upsert }
+  batch: {}
+
+exporters:
+  otlp/tempo:                 # traces  -> Tempo
+    endpoint: tempo:4317
+    tls: { insecure: true }
+  prometheus:                 # metrics -> exposed for Prometheus to scrape
+    endpoint: 0.0.0.0:8889
+  otlphttp/loki:              # logs    -> Loki (native OTLP endpoint)
+    endpoint: http://loki:3100/otlp
+  debug:
+    verbosity: basic
+
+service:
+  pipelines:
+    traces:  { receivers: [otlp],             processors: [memory_limiter, resource, batch], exporters: [otlp/tempo, debug] }
+    metrics: { receivers: [otlp, hostmetrics], processors: [memory_limiter, resource, batch], exporters: [prometheus] }
+    logs:    { receivers: [otlp],             processors: [memory_limiter, resource, batch], exporters: [otlphttp/loki] }
